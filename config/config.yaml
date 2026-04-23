@@ -1,0 +1,33 @@
+# OpMS 自动化测试框架配置文件
+
+# 基础配置,注意不要用"/"结尾。获取账号密码请联系falamo@qq.com
+base_url: "http://47.253.182.106"
+
+# 浏览器配置
+browser: chromium      # 可选: chromium, firefox, webkit
+headless: false         # 无头模式: true-不显示浏览器窗口, false-显示浏览器窗口
+
+# Tracing 配置
+tracing:
+  enabled: false       # 是否启用 tracing: true-启用, false-禁用
+  dir: reports/traces  # tracing 文件保存目录
+  cleanup_days: 7      # 自动清理多少天前的 trace 文件
+
+# 超时配置（单位：毫秒）
+timeout:
+  page_load: 30000     # 页面加载最大等待时间
+  script: 10000        # 脚本执行最大等待时间
+
+# 日志配置
+log:
+  level: DEBUG         # 日志级别: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  dir: logs            # 日志保存目录
+  format: "%(asctime)s [%(levelname)s] %(name)s - %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+
+# 报告配置
+report:
+  title: "OpMS 自动化测试报告"
+  description: "OpMS 系统自动化测试执行报告"
+  language: zh-CN      # 报告语言: zh-CN, en-US
+  theme: default       # 报告主题: default, dark, fancy

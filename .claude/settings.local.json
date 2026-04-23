@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip list *)",
+      "Bash(python -c \"from utils.logger import Logger; log = Logger.get\\(\\); log.info\\('Logger works'\\); log.debug\\('debug message'\\)\")",
+      "Bash(python -c \"from base.base_test import BaseTest; print\\('import ok'\\)\")"
+    ]
+  }
+}
