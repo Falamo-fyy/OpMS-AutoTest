@@ -14,12 +14,12 @@ class LoginPage(BasePage):
     # 元素定位器
     USERNAME = "input[placeholder='请输入用户名']"
     PASSWORD = "input[placeholder='请输入密码']"
-    LOGIN_BTN = "登录"
-    SUCCESS_TEXT = "综合运维服务管理平台"
+    LOGIN_BTN = "button.login-button"
+    SUCCESS_TEXT = "综合运维服务平台"
 
     def navigate_to_login_page(self):
         """导航到登录页面"""
-        self.goto("/login")
+        self.goto("/#/login")
 
     def input_username(self, username=TEST_USER):
         """输入用户名"""
@@ -31,7 +31,7 @@ class LoginPage(BasePage):
 
     def click_login_button(self):
         """点击登录按钮"""
-        self.get_by_text(self.LOGIN_BTN).click()
+        self.locator(self.LOGIN_BTN).click()
 
     def assert_login_success(self):
         """断言登录成功"""

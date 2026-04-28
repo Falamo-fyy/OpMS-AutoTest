@@ -18,8 +18,15 @@ login_data = ConfigReader(DATA_PATH)
 class TestLogin(BaseTest):
     """登录功能测试用例"""
 
-    def _get_login_page(self) -> LoginPage:
-        return LoginPage(self.page)
+    @pytest.fixture(autouse=True)
+    def _setup_login(self, login_page: LoginPage, request):
+        """注入类级别共享的 login_page，同时初始化 BaseTest 所需属性"""
+        self._login_page = login_page
+        # 将共享 page 注入到 BaseTest，使截图等通用能力可用
+        self.page = login_page.page
+        self.base_page = login_page
+        self.logger = Logger.get(request.node.name)
+        self._test_name = request.node.name
 
     @allure.title("正确的账号密码登录成功")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -27,11 +34,10 @@ class TestLogin(BaseTest):
     @pytest.mark.login
     def test_login_success(self):
         """使用正确的账号密码登录，验证登录成功"""
-        login = self._get_login_page()
         logger.step("执行登录流程")
-        login.login()
+        self._login_page.login()
         logger.step("验证登录成功")
-        login.assert_login_success()
+        self._login_page.assert_login_success()
         logger.success("登录成功")
 
     @allure.title("错误的用户名登录失败")
@@ -41,11 +47,10 @@ class TestLogin(BaseTest):
     def test_login_with_wrong_username(self):
         """使用错误的用户名登录，验证登录失败"""
         data = login_data.get("login_wrong_username")
-        login = self._get_login_page()
         logger.step(f"执行登录流程: {data['description']}")
-        login.login(username=data["username"], password=data["password"])
+        self._login_page.login(username=data["username"], password=data["password"])
         logger.step("验证仍在登录页面")
-        login.assert_visible(f"text={login.LOGIN_BTN}")
+        self._login_page.assert_visible(self._login_page.LOGIN_BTN)
         logger.success("错误用户名登录失败验证通过")
 
     @allure.title("空用户名登录失败")
@@ -55,11 +60,10 @@ class TestLogin(BaseTest):
     def test_login_with_empty_username(self):
         """用户名为空时登录，验证登录失败"""
         data = login_data.get("login_empty_username")
-        login = self._get_login_page()
         logger.step(f"执行登录流程: {data['description']}")
-        login.login(username=data["username"], password=data["password"])
+        self._login_page.login(username=data["username"], password=data["password"])
         logger.step("验证仍在登录页面")
-        login.assert_visible(f"text={login.LOGIN_BTN}")
+        self._login_page.assert_visible(self._login_page.LOGIN_BTN)
         logger.success("空用户名登录失败验证通过")
 
     @allure.title("空密码登录失败")
@@ -69,9 +73,8 @@ class TestLogin(BaseTest):
     def test_login_with_empty_password(self):
         """密码为空时登录，验证登录失败"""
         data = login_data.get("login_empty_password")
-        login = self._get_login_page()
         logger.step(f"执行登录流程: {data['description']}")
-        login.login(username=data["username"], password=data["password"])
+        self._login_page.login(username=data["username"], password=data["password"])
         logger.step("验证仍在登录页面")
-        login.assert_visible(f"text={login.LOGIN_BTN}")
+        self._login_page.assert_visible(self._login_page.LOGIN_BTN)
         logger.success("空密码登录失败验证通过")

@@ -34,10 +34,10 @@ class BaseTest:
     logger: Logger
 
     @pytest.fixture(autouse=True)
-    def _setup(self, page: Page, request):
-        """自动注入的 setup fixture，每个测试用例执行前初始化 page、base_page、logger"""
-        self.page = page
-        self.base_page = BasePage(page)
+    def _setup(self, request):
+        """自动注入的 setup fixture，每个测试用例执行前初始化 logger
+        page 和 base_page 由子类 fixture 注入，避免与共享 fixture 创建重复浏览器窗口
+        """
         self.logger = Logger.get(request.node.name)
         self._test_name = request.node.name
         self.logger.info(f"初始化测试用例: {self._test_name}")

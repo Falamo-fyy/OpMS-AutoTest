@@ -34,8 +34,9 @@ class BasePage:
 
     def goto(self, url: str):
         """导航到指定 URL 地址"""
-        self.page.goto(cfg["base_url"] + f"{url}")
-        logger.info(f"导航到{cfg['base_url'] + url}")
+        base_url = cfg.get("base_url", default="")
+        self.page.goto(base_url + url)
+        logger.info(f"导航到{base_url + url}")
 
     def locator(self, selector: str):
         """根据选择器查找元素，返回 Locator 对象"""
@@ -55,7 +56,6 @@ class BasePage:
     def fill(self, selector: str, value: str, **kwargs):
         """清空输入框并填入指定值"""
         self.locator(selector).fill(value, **kwargs)
-        logger.info(f"清空输入框{selector}并填入值{value}")
 
     def type(self, selector: str, value: str, **kwargs):
         """模拟键盘逐字符输入，触发键盘事件"""

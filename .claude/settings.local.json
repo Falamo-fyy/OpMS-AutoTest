@@ -3,7 +3,16 @@
     "allow": [
       "Bash(pip list *)",
       "Bash(python -c \"from utils.logger import Logger; log = Logger.get\\(\\); log.info\\('Logger works'\\); log.debug\\('debug message'\\)\")",
-      "Bash(python -c \"from base.base_test import BaseTest; print\\('import ok'\\)\")"
+      "Bash(python -c \"from base.base_test import BaseTest; print\\('import ok'\\)\")",
+      "Bash(python *)",
+      "Skill(playwright-cli)",
+      "Bash(playwright-cli open *)",
+      "Bash(playwright-cli console *)",
+      "Bash(playwright-cli network *)",
+      "Bash(playwright-cli fill *)",
+      "Bash(playwright-cli click *)",
+      "Bash(python3.11 -m pytest tests/api/test_api_login.py -v --no-header -p no:allure_pytest --no-reruns)",
+      "Bash(playwright-cli snapshot *)"
     ]
   }
 }

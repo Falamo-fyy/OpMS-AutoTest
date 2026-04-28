@@ -2,6 +2,7 @@
 
 # 基础配置,注意不要用"/"结尾。获取账号密码请联系falamo@qq.com
 base_url: "http://47.253.182.106"
+api_base_url: "http://47.253.182.106:8080"
 
 # 浏览器配置
 browser: chromium      # 可选: chromium, firefox, webkit

@@ -15,7 +15,7 @@ import argparse
 import subprocess
 
 # 将项目根目录加入 sys.path，以便导入 utils
-PROJECT_ROOT = os.path.normpath(os.path.join(os.path.abspath(__file__), ".."))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_ROOT)
 
 from utils.logger import Logger
@@ -63,7 +63,7 @@ def generate_report(open_browser: bool = False) -> bool:
     ]
 
     logger.step(f"生成报告: {' '.join(cmd)}")
-    result = subprocess.run(cmd, cwd=PROJECT_ROOT)
+    result = subprocess.run(cmd, cwd=PROJECT_ROOT, shell=True)
 
     if result.returncode != 0:
         logger.fail("Allure 报告生成失败，请确认已安装 allure 并加入 PATH")
@@ -81,7 +81,7 @@ def open_report():
     """调用 allure open 启动本地服务并在浏览器中查看报告"""
     logger.step("启动 Allure 本地服务查看报告 ...")
     try:
-        subprocess.run(["allure", "open", REPORT_DIR], cwd=PROJECT_ROOT)
+        subprocess.run(["allure", "open", REPORT_DIR], cwd=PROJECT_ROOT, shell=True)
     except KeyboardInterrupt:
         logger.info("已关闭 Allure 本地服务")
 
