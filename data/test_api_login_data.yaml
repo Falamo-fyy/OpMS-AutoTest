@@ -1,0 +1,26 @@
+# 登录接口测试数据
+
+login_success:
+  username: "correct_user"
+  password: "correct_pass"
+  description: "正确的账号密码登录成功"
+
+login_wrong_username:
+  username: "wrong_user"
+  password: "wrong_pass"
+  description: "错误的用户名登录失败"
+
+login_wrong_password:
+  username: "apifox"
+  password: "wrong_pass"
+  description: "错误的密码登录失败"
+
+login_empty_username:
+  username: ""
+  password: "some_password"
+  description: "空用户名登录失败"
+
+login_empty_password:
+  username: "some_user"
+  password: ""
+  description: "空密码登录失败"

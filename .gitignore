@@ -1,3 +1,6 @@
 /.env
 /logs/
 /image/
+/temps/
+/reports/
+/.playwright-cli/
