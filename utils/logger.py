@@ -1,4 +1,5 @@
 import os
+import datetime
 import logging
 from typing import Dict, Optional
 from utils.config_reader import config
@@ -10,10 +11,14 @@ class Logger:
     支持两种使用方式：
     1. Logger.get(name) 获取标准 logging.Logger 实例
     2. Logger 实例方法直接记录各级别日志，支持额外处理器
+
+    运行级别日志：调用 set_run_log() 后，所有 logger 共享同一个日志文件，
+    不再为每个 name 生成独立文件；调用 remove_run_log() 恢复默认行为。
     """
 
     _instances: Dict[str, "Logger"] = {}
     _loggers: Dict[str, logging.Logger] = {}
+    _run_handler: logging.FileHandler = None
 
     def __init__(self, name: str = "opms"):
         self._name = name
@@ -58,14 +63,59 @@ class Logger:
             sh.setFormatter(formatter)
             logger.addHandler(sh)
 
-            fh = logging.FileHandler(
-                os.path.join(log_dir, f"{name}.log"), encoding="utf-8"
-            )
-            fh.setFormatter(formatter)
-            logger.addHandler(fh)
+            # 如果已设置运行级别日志，不再为每个 name 创建独立文件
+            if cls._run_handler is None:
+                fh = logging.FileHandler(
+                    os.path.join(log_dir, f"{name}.log"), encoding="utf-8"
+                )
+                fh.setFormatter(formatter)
+                logger.addHandler(fh)
+
+        # 已有 logger 也需要绑定运行日志处理器
+        if cls._run_handler is not None and cls._run_handler not in logger.handlers:
+            logger.addHandler(cls._run_handler)
 
         cls._loggers[name] = logger
         return logger
+
+    @classmethod
+    def set_run_log(cls, filepath: str = None):
+        """设置运行级别日志文件，所有 logger 共享该文件
+
+        调用后新建和已有的 logger 都会写入同一个文件，不再生成按 name 命名的独立文件。
+
+        Args:
+            filepath: 日志文件路径，默认为 logs/run_YYYYMMDD_HHMMSS.log
+        """
+        if filepath is None:
+            log_dir = config.get("log", "dir", default="logs")
+            if not os.path.isabs(log_dir):
+                log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", log_dir)
+            log_dir = os.path.normpath(log_dir)
+            os.makedirs(log_dir, exist_ok=True)
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            filepath = os.path.join(log_dir, f"run_{timestamp}.log")
+
+        fmt = config.get("log", "format", default="%(asctime)s [%(levelname)s] %(name)s - %(message)s")
+        datefmt = config.get("log", "date_format", default="%Y-%m-%d %H:%M:%S")
+        cls._run_handler = logging.FileHandler(filepath, encoding="utf-8")
+        cls._run_handler.setFormatter(logging.Formatter(fmt=fmt, datefmt=datefmt))
+
+        # 为所有已有 logger 绑定运行日志处理器
+        for lg in cls._loggers.values():
+            if cls._run_handler not in lg.handlers:
+                lg.addHandler(cls._run_handler)
+
+    @classmethod
+    def remove_run_log(cls):
+        """移除运行级别日志文件处理器，恢复默认行为"""
+        if cls._run_handler is None:
+            return
+        for lg in cls._loggers.values():
+            if cls._run_handler in lg.handlers:
+                lg.removeHandler(cls._run_handler)
+        cls._run_handler.close()
+        cls._run_handler = None
 
     # -------- 日志处理器管理 --------
 

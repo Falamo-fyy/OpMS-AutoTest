@@ -5,7 +5,7 @@ from utils.config_reader import config as cfg
 from utils.logger import Logger
 from typing import Literal, Optional
 
-logger = Logger.get("base_page")
+logger = Logger.get("opms")
 
 # 截图目录
 _IMAGE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "image")

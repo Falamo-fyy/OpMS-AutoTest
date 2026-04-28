@@ -42,10 +42,19 @@ def browser():
 
 
 def pytest_configure():
-    """pytest 初始化钩子，仅在 tracing 启用时清理过期 trace"""
+    """pytest 初始化钩子，设置运行级别日志，清理过期 trace 和日志"""
+    from utils.logger import Logger
+    Logger.set_run_log()
+    from utils.cleanup import clean_traces, clean_logs
+    clean_logs()
     if _tracing_enabled:
-        from utils.cleanup import clean_traces
         clean_traces()
+
+
+def pytest_unconfigure():
+    """pytest 结束钩子，移除运行级别日志处理器"""
+    from utils.logger import Logger
+    Logger.remove_run_log()
 
 
 @pytest.fixture

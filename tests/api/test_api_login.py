@@ -12,7 +12,7 @@ from utils.config_reader import ConfigReader, config as cfg
 
 load_dotenv()
 
-logger = Logger.get("test_api_login")
+logger = Logger.get("opms")
 
 DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "test_api_login_data.yaml")
 login_data = ConfigReader(DATA_PATH)
@@ -30,7 +30,7 @@ class TestApiLogin(BaseTest):
     @pytest.fixture(autouse=True)
     def _setup_api(self, request):
         """初始化接口测试所需属性"""
-        self.logger = Logger.get(request.node.name)
+        self.logger = Logger.get("opms")
         self._test_name = request.node.name
         self.logger.info(f"初始化接口测试用例: {self._test_name}")
 

@@ -36,3 +36,34 @@ def clean_traces(traces_dir: str = None, days: int = None):
             for f in os.listdir(date_dir):
                 os.remove(os.path.join(date_dir, f))
             os.rmdir(date_dir)
+
+
+def clean_logs(logs_dir: str = None, days: int = None):
+    """清理指定天数前的日志文件
+
+    根据文件最后修改时间判断，删除超过保留天数的 .log 文件。
+
+    Args:
+        logs_dir: 日志文件目录，默认从 config.yaml 读取
+        days: 保留最近多少天的文件，默认从 config.yaml 读取
+    """
+    if logs_dir is None:
+        logs_dir = cfg.get("log", "dir", default="logs")
+        if not os.path.isabs(logs_dir):
+            logs_dir = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))), logs_dir
+            )
+    if days is None:
+        days = cfg.get_int("log", "cleanup_days", default=7)
+
+    if not os.path.isdir(logs_dir):
+        return
+
+    cutoff = datetime.datetime.now() - datetime.timedelta(days=days)
+    for entry in os.listdir(logs_dir):
+        filepath = os.path.join(logs_dir, entry)
+        if not os.path.isfile(filepath) or not entry.endswith(".log"):
+            continue
+        mtime = datetime.datetime.fromtimestamp(os.path.getmtime(filepath))
+        if mtime < cutoff:
+            os.remove(filepath)

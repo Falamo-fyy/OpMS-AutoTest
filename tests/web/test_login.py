@@ -7,7 +7,7 @@ from page.login_page import LoginPage
 from utils.logger import Logger
 from utils.config_reader import ConfigReader
 
-logger = Logger.get("test_login")
+logger = Logger.get("opms")
 
 DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "test_login_data.yaml")
 login_data = ConfigReader(DATA_PATH)
@@ -25,7 +25,7 @@ class TestLogin(BaseTest):
         # 将共享 page 注入到 BaseTest，使截图等通用能力可用
         self.page = login_page.page
         self.base_page = login_page
-        self.logger = Logger.get(request.node.name)
+        self.logger = Logger.get("opms")
         self._test_name = request.node.name
 
     @allure.title("正确的账号密码登录成功")

@@ -38,7 +38,7 @@ class BaseTest:
         """自动注入的 setup fixture，每个测试用例执行前初始化 logger
         page 和 base_page 由子类 fixture 注入，避免与共享 fixture 创建重复浏览器窗口
         """
-        self.logger = Logger.get(request.node.name)
+        self.logger = Logger.get("opms")
         self._test_name = request.node.name
         self.logger.info(f"初始化测试用例: {self._test_name}")
 

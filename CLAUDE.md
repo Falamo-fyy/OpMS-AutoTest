@@ -68,11 +68,12 @@ Playwright-based web UI test framework using Page Object Model, testing a Chines
 
 ### Fixture lifecycle (`conftest.py`)
 
-- `pytest_configure` / `pytest_unconfigure` — session-scoped browser launch/teardown
+- `pytest_configure` / `pytest_unconfigure` — session-scoped browser launch/teardown; `pytest_configure` sets run-level log file and cleans expired logs/traces
 - `context` fixture — creates a browser context per test (1920x1080 viewport, configured timeouts)
 - `page` fixture — creates a new page per test from the context
 - `pytest_runtest_makereport` hook — auto-screenshots on failure to `image/`
 - Tracing: when `tracing.enabled=true` in config, Playwright traces are saved to `reports/traces/YYYY-MM-DD/test_name.zip` and auto-cleaned after `tracing.cleanup_days` days
+- Logging: each pytest run produces a single log file `logs/run_YYYYMMDD_HHMMSS.log`; expired logs auto-cleaned after `log.cleanup_days` days
 
 ### Output directories
 
@@ -86,6 +87,8 @@ Playwright-based web UI test framework using Page Object Model, testing a Chines
 ### Logging (`utils/logger.py`)
 
 `Logger.get(name)` returns a singleton. Convenience methods with prefixes: `step()` → `[STEP]`, `data()` → `[DATA]`, `success()` → `[PASS]`, `fail()` → `[FAIL]`. All `BasePage` methods log at INFO level. Configuration (level, format, dir) comes from `config.yaml` `log` section.
+
+During pytest runs, `Logger.set_run_log()` is called in `pytest_configure` to create a shared log file `logs/run_YYYYMMDD_HHMMSS.log`. All loggers write to this single file instead of per-name files. Expired logs are auto-cleaned by `clean_logs()` based on `log.cleanup_days` in config.
 
 ## Conventions
 
