@@ -5,6 +5,10 @@ user_login:
   path: /user/login
   method: POST
 
+user_logout:
+  path: /user/logout
+  method: POST
+
 user_info:
   path: /user/info
   method: GET

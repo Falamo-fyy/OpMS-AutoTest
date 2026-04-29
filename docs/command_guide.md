@@ -52,8 +52,8 @@ cp .env.example .env
 | `-v` | 详细输出（已默认启用） |
 | `-s` | 显示 print 标准输出（已默认启用） |
 | `--tb=short` | 短格式错误回溯（已默认启用） |
-| `--reruns 2` | 失败用例自动重试 2 次（已默认启用） |
-| `--reruns-delay 1` | 重试间隔 1 秒（已默认启用） |
+| `--reruns 2` | 失败用例自动重试 2 次（仅 `scripts/run_tests.py`，非 pytest 默认） |
+| `--reruns-delay 1` | 重试间隔 1 秒（仅 `scripts/run_tests.py`，非 pytest 默认） |
 | `-k "login"` | 按用例名模糊匹配 |
 | `-x` | 遇到第一个失败立即停止 |
 | `--maxfail=3` | 累计 3 个失败后停止 |
@@ -130,8 +130,10 @@ cp .env.example .env
 
 ## pytest.ini 默认参数
 
-pytest 运行时自动附加以下参数，无需手动指定：
+pytest.ini 中 `addopts` 默认附加以下参数：
 
 ```
--v -s --tb=short --reruns 2 --reruns-delay 1 --alluredir=./temps --clean-alluredir
+-v -s --tb=short
 ```
+
+`--reruns 2 --reruns-delay 1 --alluredir=./temps --clean-alluredir` 仅在通过 `scripts/run_tests.py` 运行时才生效，裸 `pytest` 不包含这些参数。

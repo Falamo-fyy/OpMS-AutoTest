@@ -94,6 +94,7 @@ Adding a new API endpoint: add an entry to `api_config.yaml`, then call `self._a
 
 | Fixture | Scope | Purpose |
 |---------|-------|---------|
+| `config` | session | Full config dictionary (`cfg.data`) for direct config reads |
 | `browser` | session | Single browser instance for entire test session |
 | `context` | function | Isolated browser context per test (separate cookies/storage) |
 | `page` | function | New page per test from function-scoped context |
@@ -101,6 +102,7 @@ Adding a new API endpoint: add an entry to `api_config.yaml`, then call `self._a
 | `shared_page` | class | Shared page for all tests in a class |
 | `login_page` | class | Shared `LoginPage` instance wrapping `shared_page` |
 | `logged_in_page` | class | `shared_page` after performing login — use this for tests needing auth |
+| `logged_in_api` | class | Pre-authenticated `BaseApi` instance — use for API tests; yield后恢复token防止状态污染 |
 
 Tests that need login should request `logged_in_page` in their class-level `_setup_*` fixture. Login executes once per class and all methods share the session.
 
@@ -109,8 +111,8 @@ Tests that need login should request `logged_in_page` in their class-level `_set
 ### Test class fixture pattern
 
 Every test class defines an `autouse=True` fixture named `_setup_*` that:
-1. Receives the appropriate fixture (`logged_in_page` for web, none for API)
-2. Creates the page object or `BaseApi` instance
+1. Receives the appropriate fixture (`logged_in_page` for web, `logged_in_api` for API)
+2. Creates the page object or assigns the `BaseApi` instance
 3. Sets `self.logger`, `self._test_name`, and type-specific attributes
 4. Performs setup actions (navigate to page, login, etc.)
 
@@ -126,14 +128,16 @@ def _setup_search(self, logged_in_page, request):
     self._purchase_page.navigate_to_purchase_request()
 ```
 
-API test example:
+API test example (using `logged_in_api`):
 ```python
 @pytest.fixture(autouse=True)
-def _setup_api(self, request):
+def _setup_api(self, logged_in_api, request):
+    self._api = logged_in_api
+    self._original_token = logged_in_api.get_token()
     self.logger = Logger.get("opms")
     self._test_name = request.node.name
-    self._api = BaseApi()
-    self._api.login(username, password)  # optional pre-login
+    yield
+    self._api.set_token(self._original_token)  # 恢复 token 防止用例间状态污染
 ```
 
 ### Output directories
@@ -162,7 +166,7 @@ During pytest runs, `Logger.set_run_log()` is called in `pytest_configure` to cr
 
 - All code comments, log messages, and docstrings are in Chinese
 - Every `BasePage` method must log its action before (and after for getters that return values)
-- Test credentials are accessed from `.env` via `os.getenv()`, never hardcoded
+- Test credentials are accessed from `.env` via `os.getenv()` (no hardcoded defaults — `.env` 缺失时直接报错，避免隐藏配置问题)
 - Test data for parameterized/negative cases lives in `data/api/*.yaml` or `data/web/*.yaml`, loaded via `ConfigReader(path)`, not inline in test files
 - Custom pytest markers: `smoke`, `critical`, `slow`, `regression`, `api`, `web`
 - API 测试用例必须引入 `json` 库处理接口返回的 JSON 数据：字符串处理用 `json.loads()` / `json.dumps()`，文件处理用 `json.load()` / `json.dump()`

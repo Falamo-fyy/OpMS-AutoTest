@@ -82,10 +82,13 @@ class BaseApi:
             hdrs.update(headers)
 
         safe_params = {k: ("******" if k in ("password", "pwd", "secret") else v) for k, v in (params or {}).items()}
-        logger.step(f"发送{method.upper()}请求: {url}, headers: {hdrs}, params: {safe_params}")
+        safe_hdrs = {k: (v[:20] + "..." if k == "Authorization" and len(v) > 20 else v) for k, v in hdrs.items()}
+        logger.step(f"发送{method.upper()}请求: {url}, headers: {safe_hdrs}, params: {safe_params}")
+
         response = requests.request(method, url, params=params, json=json_data,
                                     data=data, headers=hdrs, timeout=self._timeout)
         logger.step(f"响应状态码: {response.status_code}, 响应体: {response.text}")
+
         return response
 
     def get(self, path: str, **kwargs) -> requests.Response:
@@ -127,6 +130,12 @@ class BaseApi:
         self._token = token
         logger.success(f"登录成功, 获取 token: {token[:20]}...")
         return token
+
+    def logout(self):
+        """注销并清除 token"""
+        self.send("user_logout")
+        self._token = None
+        logger.success("注销成功, token 已清除")
 
     def set_token(self, token: str):
         """手动设置 token"""

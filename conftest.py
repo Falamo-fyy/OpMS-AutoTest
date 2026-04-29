@@ -145,6 +145,7 @@ def logged_in_api():
     password = os.getenv("TEST_PASSWORD")
     api.login(username, password)
     yield api
+    api.logout()
 
 
 # -------- 失败自动截图 --------

@@ -5,7 +5,6 @@ import allure
 from dotenv import load_dotenv
 
 from base.base_test import BaseTest
-from base.base_api import BaseApi
 from utils.logger import Logger
 from utils.config_reader import ConfigReader
 
