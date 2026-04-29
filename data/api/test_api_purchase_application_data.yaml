@@ -24,14 +24,22 @@ query_by_urgency:
     pageNum: 1
     pageSize: 10
   body:
+    # 申请编号
     applicationNo: ""
-    urgencyLevel: "1"
+    # 紧急程度：普通、紧急、非常紧急
+    urgencyLevel: "普通"
+    # 申请项目
     applicationItem: ""
+    # 使用科室
     department: ""
+    # 申请人
     creator: ""
+    # 审核状态：已提交、已批准、已拒绝、审核中、待定
     auditStatus: ""
+    # yyyy-MM-dd 格式的时间范围
     applicationStartDate: ""
     applicationEndDate: ""
+    # 审核模式
     isAuditStatus: false
 
 # 按审核状态筛选
@@ -46,10 +54,10 @@ query_by_audit_status:
     applicationItem: ""
     department: ""
     creator: ""
-    auditStatus: "1"
+    auditStatus: ""
     applicationStartDate: ""
     applicationEndDate: ""
-    isAuditStatus: false
+    isAuditStatus: true
 
 # 按申请编号精确查询
 query_by_application_no:
