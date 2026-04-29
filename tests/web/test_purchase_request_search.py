@@ -45,10 +45,26 @@ class TestPurchaseRequestSearch(BaseTest):
 
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
+
         for i in range(count):
-            cell = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
-            assert cell == data["urgency"], f"第{i + 1}行紧急程度应为{data['urgency']}，实际为{cell}"
-        logger.success(f"{data['description']}验证通过，共{count}条")
+            cell_text = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
+            expected = data["urgency"]
+
+            # 处理空格问题（Element UI 经常有前后空格）
+            assert cell_text == expected, (
+                f"第{i + 1}行紧急程度验证失败\n"
+                f"期望: '{expected}'\n"
+                f"实际: '{cell_text}'\n"
+                f"原始值: '{repr(cell_text)}'"
+            )
+
+        # 获取总记录数
+        count = self._purchase_page.get_total_count()
+
+        logger.success(f"{data['description']}验证通过，{count}")
+
+        # 重置筛选条件
+        self._purchase_page.click_reset()
 
     @allure.title("按紧急程度筛选-紧急")
     @allure.severity(allure.severity_level.NORMAL)
@@ -64,10 +80,26 @@ class TestPurchaseRequestSearch(BaseTest):
 
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
+
         for i in range(count):
-            cell = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
-            assert cell == data["urgency"], f"第{i + 1}行紧急程度应为{data['urgency']}，实际为{cell}"
-        logger.success(f"{data['description']}验证通过，共{count}条")
+            cell_text = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
+            expected = data["urgency"]
+
+            # 处理空格问题（Element UI 经常有前后空格）
+            assert cell_text == expected, (
+                f"第{i + 1}行紧急程度验证失败\n"
+                f"期望: '{expected}'\n"
+                f"实际: '{cell_text}'\n"
+                f"原始值: '{repr(cell_text)}'"
+            )
+
+        # 获取总记录数
+        count = self._purchase_page.get_total_count()
+
+        logger.success(f"{data['description']}验证通过，{count}")
+
+        # 重置筛选条件
+        self._purchase_page.click_reset()
 
     @allure.title("按紧急程度筛选-非常紧急")
     @allure.severity(allure.severity_level.NORMAL)
@@ -83,10 +115,26 @@ class TestPurchaseRequestSearch(BaseTest):
 
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
+
         for i in range(count):
-            cell = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
-            assert cell == data["urgency"], f"第{i + 1}行紧急程度应为{data['urgency']}，实际为{cell}"
-        logger.success(f"{data['description']}验证通过，共{count}条")
+            cell_text = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
+            expected = data["urgency"]
+
+            # 处理空格问题（Element UI 经常有前后空格）
+            assert cell_text == expected, (
+                f"第{i + 1}行紧急程度验证失败\n"
+                f"期望: '{expected}'\n"
+                f"实际: '{cell_text}'\n"
+                f"原始值: '{repr(cell_text)}'"
+            )
+
+        # 获取总记录数
+        count = self._purchase_page.get_total_count()
+
+        logger.success(f"{data['description']}验证通过，{count}")
+
+        # 重置筛选条件
+        self._purchase_page.click_reset()
 
     @allure.title("按审核状态筛选-已提交")
     @allure.severity(allure.severity_level.NORMAL)
@@ -102,10 +150,26 @@ class TestPurchaseRequestSearch(BaseTest):
 
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
+
         for i in range(count):
-            cell = self._purchase_page.get_cell_text_by_header(i, "审核状态")
-            assert cell == data["status"], f"第{i + 1}行审核状态应为{data['status']}，实际为{cell}"
-        logger.success(f"{data['description']}验证通过，共{count}条")
+            cell_text = self._purchase_page.get_cell_text_by_header(i, "审核状态")
+            expected = data["status"]
+
+            # 处理空格问题（Element UI 经常有前后空格）
+            assert cell_text == expected, (
+                f"第{i + 1}行审核状态验证失败\n"
+                f"期望: '{expected}'\n"
+                f"实际: '{cell_text}'\n"
+                f"原始值: '{repr(cell_text)}'"
+            )
+
+        # 获取总记录数
+        count = self._purchase_page.get_total_count()
+
+        logger.success(f"{data['description']}验证通过，{count}")
+
+        # 重置筛选条件
+        self._purchase_page.click_reset()
 
     @allure.title("按审核状态筛选-已拒绝")
     @allure.severity(allure.severity_level.NORMAL)
@@ -121,10 +185,26 @@ class TestPurchaseRequestSearch(BaseTest):
 
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
+
         for i in range(count):
-            cell = self._purchase_page.get_cell_text_by_header(i, "审核状态")
-            assert cell == data["status"], f"第{i + 1}行审核状态应为{data['status']}，实际为{cell}"
-        logger.success(f"{data['description']}验证通过，共{count}条")
+            cell_text = self._purchase_page.get_cell_text_by_header(i, "审核状态")
+            expected = data["status"]
+
+            # 处理空格问题（Element UI 经常有前后空格）
+            assert cell_text == expected, (
+                f"第{i + 1}行审核状态验证失败\n"
+                f"期望: '{expected}'\n"
+                f"实际: '{cell_text}'\n"
+                f"原始值: '{repr(cell_text)}'"
+            )
+
+        # 获取总记录数
+        count = self._purchase_page.get_total_count()
+
+        logger.success(f"{data['description']}验证通过，{count}")
+
+        # 重置筛选条件
+        self._purchase_page.click_reset()
 
     @allure.title("按使用科室筛选")
     @allure.severity(allure.severity_level.NORMAL)
@@ -140,10 +220,26 @@ class TestPurchaseRequestSearch(BaseTest):
 
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
+
         for i in range(count):
-            cell = self._purchase_page.get_cell_text_by_header(i, "使用科室")
-            assert cell == data["department"], f"第{i + 1}行使用科室应为{data['department']}，实际为{cell}"
-        logger.success(f"{data['description']}验证通过，共{count}条")
+            cell_text = self._purchase_page.get_cell_text_by_header(i, "使用科室")
+            expected = data["department"]
+
+            # 处理空格问题（Element UI 经常有前后空格）
+            assert cell_text == expected, (
+                f"第{i + 1}行使用科室验证失败\n"
+                f"期望: '{expected}'\n"
+                f"实际: '{cell_text}'\n"
+                f"原始值: '{repr(cell_text)}'"
+            )
+
+        # 获取总记录数
+        count = self._purchase_page.get_total_count()
+
+        logger.success(f"{data['description']}验证通过，{count}")
+
+        # 重置筛选条件
+        self._purchase_page.click_reset()
 
     # -------- 文本搜索 --------
 

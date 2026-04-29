@@ -134,8 +134,14 @@ class BasePage:
 
     def wait_for_load_state(self, state: Optional[Literal["domcontentloaded", "load", "networkidle"]] = "load"):
         """等待页面加载到指定状态（load/domcontentloaded/networkidle）"""
+        self.wait_for_timeout()
         logger.info(f"等待页面加载到{state}")
         self.page.wait_for_load_state(state)
+
+    def wait_for_timeout(self, timeout=2000):
+        """等待指定时间（毫秒）"""
+        logger.info(f"等待{timeout}毫秒")
+        self.page.wait_for_timeout(timeout)
 
     def assert_visible(self, selector: str):
         """断言元素可见"""

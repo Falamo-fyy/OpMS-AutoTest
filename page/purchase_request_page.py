@@ -1,3 +1,5 @@
+from playwright.sync_api import expect
+
 from base.base_page import BasePage
 
 
@@ -16,6 +18,11 @@ class PurchaseRequestPage(BasePage):
     SEARCH_BTN = "button:has-text('查询')"
     RESET_BTN = "button:has-text('重置')"
 
+    # -------- 下拉选择框 --------
+    SELECT_URGENCY_TEXT = "请选择紧急程度"
+    SELECT_STATUS_TEXT = "请选择审核状态"
+    SELECT_DEPARTMENT_TEXT = "请选择使用科室"
+
     # -------- 列表页 - 操作按钮 --------
     ADD_BTN = "button:has-text('新增申请')"
     DEPARTMENT_BTN = "button:has-text('科室管理')"
@@ -26,6 +33,10 @@ class PurchaseRequestPage(BasePage):
     # -------- 列表页 - 表格 --------
     TABLE_ROW = ".el-table__body-wrapper .el-table__row"
     CHECKBOX_ALL = ".el-table__header .el-checkbox"
+
+    # -------- 列表页 - 列名 --------
+    CHECKBOX_TITLE = ".el-table__header"
+    ROW_URGENCY_TEXT = "紧急程度"
 
     # -------- 新增/编辑弹窗 --------
     DIALOG = "[aria-label='新增采购申请']"
@@ -106,22 +117,23 @@ class PurchaseRequestPage(BasePage):
 
     def select_urgency_filter(self, urgency: str):
         """选择紧急程度筛选"""
-        self._search_select_by_label("紧急程度").click()
-        self.page.get_by_role("listitem").filter(has_text=urgency).click()
+        self.get_by_text(self.SELECT_URGENCY_TEXT).click()
+        self.page.get_by_role("option", name=urgency, exact=True).click()
 
     def select_department_filter(self, department: str):
         """选择使用科室筛选"""
-        self._search_select_by_label("使用科室").click()
-        self.page.get_by_role("listitem").filter(has_text=department).click()
+        self.get_by_text(self.SELECT_DEPARTMENT_TEXT).click()
+        self.page.get_by_role("option", name=department, exact=True).click()
 
     def select_status_filter(self, status: str):
         """选择审核状态筛选"""
-        self._search_select_by_label("审核状态").click()
-        self.page.get_by_role("listitem").filter(has_text=status).click()
+        self.get_by_text(self.SELECT_STATUS_TEXT).click()
+        self.page.get_by_role("option", name=status, exact=True).click()
 
     def click_search(self):
         """点击查询按钮"""
         self.click(self.SEARCH_BTN)
+        self.wait_for_load_state("networkidle")
 
     def click_reset(self):
         """点击重置按钮"""
@@ -142,21 +154,36 @@ class PurchaseRequestPage(BasePage):
         return self._body_table().get_by_role("row").nth(row).get_by_role("cell").nth(col).inner_text()
 
     def get_cell_text_by_header(self, row: int, header: str) -> str:
-        """根据列标题获取表格指定行的单元格文本
+        """根据列标题获取表格指定行的单元格文本（优化版）"""
 
-        Args:
-            row: 行索引，从0开始
-            header: 列标题名称，如"申请编号"、"紧急程度"等
-        """
-        headers = self._header_table().get_by_role("columnheader")
+        # 1. 获取所有表头文本，建立标题→索引映射（只查一次DOM）
+        headers = self._header_table().locator("th .cell")  # 精确到文本容器
+        header_count = headers.count()
+
         col_index = -1
-        for i in range(headers.count()):
-            if header in headers.nth(i).inner_text():
+        for i in range(header_count):
+            # 用 exact=False 做包含匹配，或用正则处理空格
+            header_text = headers.nth(i).inner_text().strip()
+            if header == header_text or header in header_text:
                 col_index = i
                 break
+
         if col_index == -1:
-            raise ValueError(f"未找到列标题: {header}")
-        return self._body_table().get_by_role("row").nth(row).get_by_role("cell").nth(col_index).inner_text()
+            raise ValueError(
+                f"未找到列标题: '{header}'，可用标题: {[headers.nth(i).inner_text().strip() for i in range(header_count)]}")
+
+        # 2. 定位目标行（等待可见）
+        target_row = self._body_table().locator("tbody tr").nth(row)
+        expect(target_row).to_be_visible(timeout=5000)  # 确保行存在
+
+        # 3. 定位目标单元格（通过 nth 直接取，避免 role 干扰）
+        # 注意：如果表格有展开行或嵌套，这里可能需要更精确的选择器
+        target_cell = target_row.locator("td").nth(col_index)
+
+        # 4. 等待单元格有文本（防止异步加载）
+        expect(target_cell).not_to_have_text("", timeout=5000)
+
+        return target_cell.inner_text().strip()
 
     def click_row_checkbox(self, row: int):
         """勾选指定行的复选框
