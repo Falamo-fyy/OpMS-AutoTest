@@ -16,6 +16,7 @@ class LoginPage(BasePage):
     PASSWORD = "input[placeholder='请输入密码']"
     LOGIN_BTN = "button.login-button"
     SUCCESS_TEXT = "综合运维服务平台"
+    SUCCESS_URL = "http://47.253.182.106/#/dashboard"
 
     def navigate_to_login_page(self):
         """导航到登录页面"""
@@ -35,8 +36,8 @@ class LoginPage(BasePage):
 
     def assert_login_success(self):
         """断言登录成功"""
-        self.wait_for_load_state("domcontentloaded")
-        self.assert_visible(f"text={self.SUCCESS_TEXT}")
+        self.wait_for_load_state("networkidle")
+        self.assert_url(self.SUCCESS_URL)
 
     def login(self, username=TEST_USER, password=TEST_PASSWORD):
         """执行完整登录流程"""
