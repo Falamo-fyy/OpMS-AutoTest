@@ -46,7 +46,7 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
         for i in range(count):
-            cell = self._purchase_page.get_cell_text(i, 2)
+            cell = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
             assert cell == data["urgency"], f"第{i + 1}行紧急程度应为{data['urgency']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过，共{count}条")
 
@@ -65,7 +65,7 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
         for i in range(count):
-            cell = self._purchase_page.get_cell_text(i, 2)
+            cell = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
             assert cell == data["urgency"], f"第{i + 1}行紧急程度应为{data['urgency']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过，共{count}条")
 
@@ -84,7 +84,7 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
         for i in range(count):
-            cell = self._purchase_page.get_cell_text(i, 2)
+            cell = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
             assert cell == data["urgency"], f"第{i + 1}行紧急程度应为{data['urgency']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过，共{count}条")
 
@@ -103,7 +103,7 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
         for i in range(count):
-            cell = self._purchase_page.get_cell_text(i, 3)
+            cell = self._purchase_page.get_cell_text_by_header(i, "审核状态")
             assert cell == data["status"], f"第{i + 1}行审核状态应为{data['status']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过，共{count}条")
 
@@ -122,7 +122,7 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
         for i in range(count):
-            cell = self._purchase_page.get_cell_text(i, 3)
+            cell = self._purchase_page.get_cell_text_by_header(i, "审核状态")
             assert cell == data["status"], f"第{i + 1}行审核状态应为{data['status']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过，共{count}条")
 
@@ -141,7 +141,7 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "筛选结果不应为空"
         for i in range(count):
-            cell = self._purchase_page.get_cell_text(i, 5)
+            cell = self._purchase_page.get_cell_text_by_header(i, "使用科室")
             assert cell == data["department"], f"第{i + 1}行使用科室应为{data['department']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过，共{count}条")
 
@@ -160,7 +160,7 @@ class TestPurchaseRequestSearch(BaseTest):
 
         count = self._purchase_page.get_table_row_count()
         assert count >= 1, "精确搜索应至少返回1条结果"
-        cell = self._purchase_page.get_cell_text(0, 1)
+        cell = self._purchase_page.get_cell_text_by_header(0, "申请编号")
         assert cell == data["request_no"], f"申请编号应为{data['request_no']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过")
 
@@ -178,7 +178,7 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count >= 1, "模糊搜索应至少返回1条结果"
         for i in range(count):
-            cell = self._purchase_page.get_cell_text(i, 1)
+            cell = self._purchase_page.get_cell_text_by_header(i, "申请编号")
             assert data["request_no"] in cell, f"第{i + 1}行申请编号应包含{data['request_no']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过，共{count}条")
 
@@ -196,7 +196,7 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count >= 1, "项目名称搜索应至少返回1条结果"
         for i in range(count):
-            cell = self._purchase_page.get_cell_text(i, 4)
+            cell = self._purchase_page.get_cell_text_by_header(i, "项目名称")
             assert data["project_name"] in cell, f"第{i + 1}行项目名称应包含{data['project_name']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过，共{count}条")
 
@@ -214,7 +214,7 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count >= 1, "申请人搜索应至少返回1条结果"
         for i in range(count):
-            cell = self._purchase_page.get_cell_text(i, 7)
+            cell = self._purchase_page.get_cell_text_by_header(i, "申请人")
             assert data["applicant"] in cell, f"第{i + 1}行申请人应包含{data['applicant']}，实际为{cell}"
         logger.success(f"{data['description']}验证通过，共{count}条")
 
@@ -236,8 +236,8 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "组合筛选结果不应为空"
         for i in range(count):
-            urgency_cell = self._purchase_page.get_cell_text(i, 2)
-            status_cell = self._purchase_page.get_cell_text(i, 3)
+            urgency_cell = self._purchase_page.get_cell_text_by_header(i, "紧急程度")
+            status_cell = self._purchase_page.get_cell_text_by_header(i, "审核状态")
             assert urgency_cell == data["urgency"], f"第{i + 1}行紧急程度应为{data['urgency']}"
             assert status_cell == data["status"], f"第{i + 1}行审核状态应为{data['status']}"
         logger.success(f"{data['description']}验证通过，共{count}条")
@@ -258,8 +258,8 @@ class TestPurchaseRequestSearch(BaseTest):
         count = self._purchase_page.get_table_row_count()
         assert count > 0, "组合筛选结果不应为空"
         for i in range(count):
-            dept_cell = self._purchase_page.get_cell_text(i, 5)
-            status_cell = self._purchase_page.get_cell_text(i, 3)
+            dept_cell = self._purchase_page.get_cell_text_by_header(i, "使用科室")
+            status_cell = self._purchase_page.get_cell_text_by_header(i, "审核状态")
             assert dept_cell == data["department"], f"第{i + 1}行科室应为{data['department']}"
             assert status_cell == data["status"], f"第{i + 1}行审核状态应为{data['status']}"
         logger.success(f"{data['description']}验证通过，共{count}条")
