@@ -20,6 +20,8 @@ login_data = ConfigReader(DATA_PATH)
 class TestApiLogin(BaseTest):
     """登录接口自动化测试用例"""
 
+    API_USER_LOGIN = "user_login"
+
     @pytest.fixture(autouse=True)
     def _setup_api(self, request):
         """初始化接口测试所需属性"""
@@ -43,66 +45,42 @@ class TestApiLogin(BaseTest):
         assert token, "登录成功但未返回 token"
         self.logger.success("登录接口成功验证通过")
 
-    @allure.title("错误的用户名登录失败")
+    @allure.title("错误凭据登录失败")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.api
     @pytest.mark.regression
-    def test_login_wrong_username(self):
-        """使用错误的用户名登录，验证返回 code!=1"""
-        data = login_data.get("login_wrong_username")
+    @pytest.mark.parametrize("case", [
+        pytest.param("login_wrong_username", id="错误用户名"),
+        pytest.param("login_wrong_password", id="错误密码"),
+    ])
+    def test_login_wrong_credentials(self, case):
+        """使用错误的用户名或密码登录，验证返回 code!=1"""
+        data = login_data.get(case)
         self.logger.step(f"执行登录: {data['description']}")
 
-        response = self._api.send("user_login", params={"username": data["username"], "password": data["password"]})
+        response = self._api.send(self.API_USER_LOGIN, params={"username": data["username"], "password": data["password"]})
         assert response.status_code == 200, f"请求失败, 状态码: {response.status_code}"
         body = self._api.parse_json(response)
 
-        assert body["code"] != 1, f"错误用户名应登录失败, 实际 code={body['code']}"
-        self.logger.success("错误用户名登录失败验证通过")
+        assert body["code"] != 1, f"错误凭据应登录失败, 实际 code={body['code']}"
+        self.logger.success(f"{data['description']}验证通过")
 
-    @allure.title("错误的密码登录失败")
+    @allure.title("空凭据登录失败")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.api
     @pytest.mark.regression
-    def test_login_wrong_password(self):
-        """使用错误的密码登录，验证返回 code!=1"""
-        data = login_data.get("login_wrong_password")
+    @pytest.mark.parametrize("case", [
+        pytest.param("login_empty_username", id="空用户名"),
+        pytest.param("login_empty_password", id="空密码"),
+    ])
+    def test_login_empty_credentials(self, case):
+        """用户名或密码为空时登录，验证接口拒绝请求"""
+        data = login_data.get(case)
         self.logger.step(f"执行登录: {data['description']}")
 
-        response = self._api.send("user_login", params={"username": data["username"], "password": data["password"]})
-        assert response.status_code == 200, f"请求失败, 状态码: {response.status_code}"
+        response = self._api.send(self.API_USER_LOGIN, params={"username": data["username"], "password": data["password"]})
         body = self._api.parse_json(response)
 
-        assert body["code"] != 1, f"错误密码应登录失败, 实际 code={body['code']}"
-        self.logger.success("错误密码登录失败验证通过")
-
-    @allure.title("空用户名登录失败")
-    @allure.severity(allure.severity_level.NORMAL)
-    @pytest.mark.api
-    @pytest.mark.regression
-    def test_login_empty_username(self):
-        """用户名为空时登录，验证接口拒绝请求"""
-        data = login_data.get("login_empty_username")
-        self.logger.step(f"执行登录: {data['description']}")
-
-        response = self._api.send("user_login", params={"username": data["username"], "password": data["password"]})
-        body = self._api.parse_json(response)
-
-        assert response.status_code == 400, f"空用户名应返回 400, 实际状态码: {response.status_code}"
-        assert body["code"] != 1, f"空用户名应登录失败, 实际 code={body['code']}"
-        self.logger.success("空用户名登录失败验证通过")
-
-    @allure.title("空密码登录失败")
-    @allure.severity(allure.severity_level.NORMAL)
-    @pytest.mark.api
-    @pytest.mark.regression
-    def test_login_empty_password(self):
-        """密码为空时登录，验证接口拒绝请求"""
-        data = login_data.get("login_empty_password")
-        self.logger.step(f"执行登录: {data['description']}")
-
-        response = self._api.send("user_login", params={"username": data["username"], "password": data["password"]})
-        body = self._api.parse_json(response)
-
-        assert response.status_code == 400, f"空密码应返回 400, 实际状态码: {response.status_code}"
-        assert body["code"] != 1, f"空密码应登录失败, 实际 code={body['code']}"
-        self.logger.success("空密码登录失败验证通过")
+        assert response.status_code == 400, f"空凭据应返回 400, 实际状态码: {response.status_code}"
+        assert body["code"] != 1, f"空凭据应登录失败, 实际 code={body['code']}"
+        self.logger.success(f"{data['description']}验证通过")

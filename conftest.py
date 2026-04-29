@@ -136,6 +136,17 @@ def logged_in_page(shared_page: Page, login_page):
     yield shared_page
 
 
+@pytest.fixture(scope="class")
+def logged_in_api():
+    """类级别共享已登录 API 客户端，先执行登录操作，同一测试类中所有用例共享 token"""
+    from base.base_api import BaseApi
+    api = BaseApi()
+    username = os.getenv("TEST_USER")
+    password = os.getenv("TEST_PASSWORD")
+    api.login(username, password)
+    yield api
+
+
 # -------- 失败自动截图 --------
 
 @pytest.hookimpl(hookwrapper=True)

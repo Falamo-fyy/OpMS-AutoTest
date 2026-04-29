@@ -1,0 +1,77 @@
+# 采购申请查询接口测试数据
+
+# 默认查询条件（全空，返回全部数据）
+query_default:
+  description: "默认条件查询采购申请列表"
+  params:
+    pageNum: 1
+    pageSize: 10
+  body:
+    applicationNo: ""
+    urgencyLevel: ""
+    applicationItem: ""
+    department: ""
+    creator: ""
+    auditStatus: ""
+    applicationStartDate: ""
+    applicationEndDate: ""
+    isAuditStatus: false
+
+# 按紧急程度筛选
+query_by_urgency:
+  description: "按紧急程度筛选采购申请"
+  params:
+    pageNum: 1
+    pageSize: 10
+  body:
+    applicationNo: ""
+    urgencyLevel: "1"
+    applicationItem: ""
+    department: ""
+    creator: ""
+    auditStatus: ""
+    applicationStartDate: ""
+    applicationEndDate: ""
+    isAuditStatus: false
+
+# 按审核状态筛选
+query_by_audit_status:
+  description: "按审核状态筛选采购申请"
+  params:
+    pageNum: 1
+    pageSize: 10
+  body:
+    applicationNo: ""
+    urgencyLevel: ""
+    applicationItem: ""
+    department: ""
+    creator: ""
+    auditStatus: "1"
+    applicationStartDate: ""
+    applicationEndDate: ""
+    isAuditStatus: false
+
+# 按申请编号精确查询
+query_by_application_no:
+  description: "按申请编号精确查询采购申请"
+  params:
+    pageNum: 1
+    pageSize: 10
+  body:
+    applicationNo: "PA202603250007"
+    urgencyLevel: ""
+    applicationItem: ""
+    department: ""
+    creator: ""
+    auditStatus: ""
+    applicationStartDate: ""
+    applicationEndDate: ""
+    isAuditStatus: false
+
+# 不携带 token 查询
+query_no_token:
+  description: "不携带 token 查询采购申请"
+
+# 携带无效 token 查询
+query_invalid_token:
+  description: "携带无效 token 查询采购申请"

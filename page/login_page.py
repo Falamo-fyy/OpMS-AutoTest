@@ -4,8 +4,8 @@ from base.base_page import BasePage
 
 load_dotenv()
 
-TEST_USER = os.getenv("TEST_USER", "")
-TEST_PASSWORD = os.getenv("TEST_PASSWORD", "")
+TEST_USER = os.getenv("TEST_USER")
+TEST_PASSWORD = os.getenv("TEST_PASSWORD")
 
 
 class LoginPage(BasePage):
