@@ -12,7 +12,8 @@
       "Bash(playwright-cli fill *)",
       "Bash(playwright-cli click *)",
       "Bash(python3.11 -m pytest tests/api/test_api_login.py -v --no-header -p no:allure_pytest --no-reruns)",
-      "Bash(playwright-cli snapshot *)"
+      "Bash(playwright-cli snapshot *)",
+      "Bash(npx playwright-cli *)"
     ]
   }
 }

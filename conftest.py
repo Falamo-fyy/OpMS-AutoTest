@@ -128,6 +128,14 @@ def login_page(shared_page: Page):
     yield LoginPage(shared_page)
 
 
+@pytest.fixture(scope="class")
+def logged_in_page(shared_page: Page, login_page):
+    """类级别共享已登录页面，先执行登录操作，同一测试类中所有用例共享登录状态"""
+    login_page.login()
+    login_page.assert_login_success()
+    yield shared_page
+
+
 # -------- 失败自动截图 --------
 
 @pytest.hookimpl(hookwrapper=True)

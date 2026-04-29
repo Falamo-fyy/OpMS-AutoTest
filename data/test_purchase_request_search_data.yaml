@@ -1,0 +1,70 @@
+# 采购申请搜索筛选测试数据
+
+# 紧急程度筛选
+search_urgency_normal:
+  urgency: "普通"
+  description: "按紧急程度筛选-普通"
+
+search_urgency_urgent:
+  urgency: "紧急"
+  description: "按紧急程度筛选-紧急"
+
+search_urgency_very_urgent:
+  urgency: "非常紧急"
+  description: "按紧急程度筛选-非常紧急"
+
+# 使用科室筛选
+search_department:
+  department: "信息技术部"
+  description: "按使用科室筛选-信息技术部"
+
+# 审核状态筛选
+search_status_submitted:
+  status: "已提交"
+  description: "按审核状态筛选-已提交"
+
+search_status_approved:
+  status: "已批准"
+  description: "按审核状态筛选-已批准"
+
+search_status_rejected:
+  status: "已拒绝"
+  description: "按审核状态筛选-已拒绝"
+
+search_status_pending:
+  status: "待定"
+  description: "按审核状态筛选-待定"
+
+search_status_reviewing:
+  status: "审核中"
+  description: "按审核状态筛选-审核中"
+
+# 申请编号搜索
+search_by_request_no:
+  request_no: "PA202603250007"
+  description: "按申请编号精确搜索"
+
+search_by_request_no_partial:
+  request_no: "PA202603"
+  description: "按申请编号模糊搜索"
+
+# 项目名称搜索
+search_by_project_name:
+  project_name: "智慧园区"
+  description: "按项目名称模糊搜索"
+
+# 申请人搜索
+search_by_applicant:
+  applicant: "初始管理员用户"
+  description: "按申请人搜索"
+
+# 组合筛选
+search_urgency_and_status:
+  urgency: "紧急"
+  status: "已提交"
+  description: "紧急程度+审核状态组合筛选"
+
+search_department_and_status:
+  department: "财务部"
+  status: "已提交"
+  description: "使用科室+审核状态组合筛选"
