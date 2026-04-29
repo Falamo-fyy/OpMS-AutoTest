@@ -9,7 +9,7 @@ from utils.config_reader import ConfigReader
 
 logger = Logger.get("opms")
 
-DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "test_purchase_request_search_data.yaml")
+DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "web", "test_purchase_request_search_data.yaml")
 search_data = ConfigReader(DATA_PATH)
 
 

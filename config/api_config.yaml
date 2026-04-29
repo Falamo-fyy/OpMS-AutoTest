@@ -1,0 +1,10 @@
+# API 接口配置
+# 每个接口定义 path（路径）和 method（请求方法）
+
+user_login:
+  path: /user/login
+  method: POST
+
+user_info:
+  path: /user/info
+  method: GET

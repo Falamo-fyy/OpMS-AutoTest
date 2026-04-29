@@ -59,13 +59,36 @@ Playwright-based web UI test framework using Page Object Model, testing a Chines
 
 ### Four-layer structure
 
-1. **Config** — `config/config.yaml` holds all runtime settings (base URL, `api_base_url`, browser, headless, timeouts, logging, tracing, reports). `utils/config_reader.py` provides a singleton `config` object with `get(*keys, default)`, `get_int()`, `get_bool()` for nested key access. Also used to load test data YAML files: `ConfigReader("data/test_login_data.yaml")`.
+1. **Config** — `config/config.yaml` holds all runtime settings (base URL, `api_base_url`, browser, headless, timeouts, logging, tracing, reports). `config/api_config.yaml` defines all API endpoints (path + method per interface). `utils/config_reader.py` provides a singleton `config` object with `get(*keys, default)`, `get_int()`, `get_bool()` for nested key access. Also used to load test data YAML files: `ConfigReader("data/api/test_api_login_data.yaml")`.
 
-2. **Base classes** — `base/base_page.py` (`BasePage`) wraps all Playwright Page interactions with `logger.info()` calls before/after each action; assertion methods auto-screenshot on failure to `image/`. `base/base_test.py` (`BaseTest`) uses `@pytest.fixture(autouse=True)` to inject only `self.logger` and `self._test_name`. Page objects (`self.page`, `self.base_page`) are injected by each test class's own `_setup_*` fixture — **not** by `BaseTest`. Also provides `save_screenshot()` and `save_screenshot_on_failure()`.
+2. **Base classes** — `base/base_page.py` (`BasePage`) wraps all Playwright Page interactions with `logger.info()` calls before/after each action; assertion methods auto-screenshot on failure to `image/`. `base/base_api.py` (`BaseApi`) wraps all `requests` interactions — `send(api_name)` reads path/method from `api_config.yaml`, auto-injects token into `Authorization` header, logs request/response; `login()` authenticates and stores token; `parse_json()` parses responses. `base/base_test.py` (`BaseTest`) uses `@pytest.fixture(autouse=True)` to inject only `self.logger` and `self._test_name`. Page objects and API client are injected by each test class's own `_setup_*` fixture — **not** by `BaseTest`.
 
 3. **Page objects** — `page/` directory. Each page class inherits from `BasePage`, defines locators as class attributes, and exposes business-action methods (navigate, input, click, assert).
 
-4. **Tests** — `tests/` directory, organized by type (`tests/web/`, `tests/api/`). Test classes inherit from `BaseTest`, use page objects to perform actions and assertions. Allure decorators for reporting. Test data is loaded from `data/*.yaml` via `ConfigReader`.
+4. **Tests** — `tests/` directory, organized by type (`tests/web/`, `tests/api/`). Test classes inherit from `BaseTest`. Web tests use page objects to perform actions and assertions; API tests use `BaseApi` to send requests and verify responses. Allure decorators for reporting. Test data is loaded from `data/api/*.yaml` or `data/web/*.yaml` via `ConfigReader`.
+
+### API test architecture (`BaseApi`)
+
+API tests use `BaseApi` from `base/base_api.py` as the single entry point for all HTTP requests:
+
+- **`send(api_name, ...)`** — primary method: reads `path` and `method` from `config/api_config.yaml` by interface name, then sends the request. Example: `self._api.send("user_info")` sends a GET to `/user/info` with auto-injected token.
+- **`api_request(method, path, ...)`** — low-level method for ad-hoc requests with explicit method/path (still auto-injects token and logs).
+- **`get/post/put/delete(path, ...)`** — shortcuts for `api_request` with fixed method.
+- **`login(username, password)`** — authenticates via `user_login` config, stores token; all subsequent `send()`/`api_request()` calls auto-attach `Authorization` header.
+- **`set_token(token)` / `get_token()`** — manually override token (for testing no-token or invalid-token scenarios).
+- **`parse_json(response)`** — parses response body with `json.loads()`, calls `pytest.fail()` on non-JSON responses.
+
+API endpoint configuration lives in `config/api_config.yaml`:
+```yaml
+user_login:
+  path: /user/login
+  method: POST
+user_info:
+  path: /user/info
+  method: GET
+```
+
+Adding a new API endpoint: add an entry to `api_config.yaml`, then call `self._api.send("new_api_name")`.
 
 ### Fixture lifecycle (`conftest.py`)
 
@@ -86,11 +109,12 @@ Tests that need login should request `logged_in_page` in their class-level `_set
 ### Test class fixture pattern
 
 Every test class defines an `autouse=True` fixture named `_setup_*` that:
-1. Receives the appropriate page fixture (`logged_in_page` for web, none for API)
-2. Creates the page object instance
-3. Sets `self.page`, `self.base_page`, `self.logger`, `self._test_name`
-4. Navigates to the target page
+1. Receives the appropriate fixture (`logged_in_page` for web, none for API)
+2. Creates the page object or `BaseApi` instance
+3. Sets `self.logger`, `self._test_name`, and type-specific attributes
+4. Performs setup actions (navigate to page, login, etc.)
 
+Web test example:
 ```python
 @pytest.fixture(autouse=True)
 def _setup_search(self, logged_in_page, request):
@@ -102,16 +126,15 @@ def _setup_search(self, logged_in_page, request):
     self._purchase_page.navigate_to_purchase_request()
 ```
 
-API test classes use `_setup_api` without any page fixture since they use `requests` directly.
-
-### API test architecture
-
-API tests (`tests/api/`) differ from web tests:
-- No Playwright/browser — use `requests` library directly
-- Read `api_base_url` from `config.yaml` via `cfg.get("api_base_url")`
-- Helper methods `_login(username, password)` sends requests, `_parse_json(response)` parses JSON with `json.loads()` and calls `pytest.fail()` on non-JSON responses
-- Load `dotenv` at module level, read credentials via `os.getenv()`
-- Test data loaded from `data/*.yaml` via `ConfigReader`
+API test example:
+```python
+@pytest.fixture(autouse=True)
+def _setup_api(self, request):
+    self.logger = Logger.get("opms")
+    self._test_name = request.node.name
+    self._api = BaseApi()
+    self._api.login(username, password)  # optional pre-login
+```
 
 ### Output directories
 
@@ -121,6 +144,13 @@ API tests (`tests/api/`) differ from web tests:
 | `logs/` | Test execution logs |
 | `temps/` | Allure raw results (cleaned each run) |
 | `reports/` | Allure HTML reports and Playwright traces |
+
+### Test data directories
+
+| Directory | Purpose |
+|-----------|---------|
+| `data/api/` | API test data (e.g., `test_api_login_data.yaml`) |
+| `data/web/` | Web UI test data (e.g., `test_login_data.yaml`, `test_purchase_request_search_data.yaml`) |
 
 ### Logging (`utils/logger.py`)
 
@@ -133,9 +163,10 @@ During pytest runs, `Logger.set_run_log()` is called in `pytest_configure` to cr
 - All code comments, log messages, and docstrings are in Chinese
 - Every `BasePage` method must log its action before (and after for getters that return values)
 - Test credentials are accessed from `.env` via `os.getenv()`, never hardcoded
-- Test data for parameterized/negative cases lives in `data/*.yaml`, loaded via `ConfigReader(path)`, not inline in test files
+- Test data for parameterized/negative cases lives in `data/api/*.yaml` or `data/web/*.yaml`, loaded via `ConfigReader(path)`, not inline in test files
 - Custom pytest markers: `smoke`, `critical`, `slow`, `regression`, `api`, `web`
 - API 测试用例必须引入 `json` 库处理接口返回的 JSON 数据：字符串处理用 `json.loads()` / `json.dumps()`，文件处理用 `json.load()` / `json.dump()`
+- API 接口信息统一维护在 `config/api_config.yaml`，通过 `BaseApi.send(api_name)` 读取配置发请求，不在测试代码中硬编码接口路径
 
 ### Locator best practices
 
