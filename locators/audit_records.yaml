@@ -1,0 +1,141 @@
+page: audit_records
+
+elements:
+
+  # ---- 搜索区域 ----
+  search_purchase_no_select:
+    type: role
+    role: combobox
+    name: 采购编号
+    options: [远程搜索，输入采购编号关键词触发选项加载]
+    note: 选项为采购申请编号，如 PA202603250001~PA202603250192 及中文描述名称
+
+  search_project_name_select:
+    type: role
+    role: combobox
+    name: 项目名称
+    options: [远程搜索，输入项目名称关键词触发选项加载]
+    note: 选项为项目名称，如 智慧园区信息化建设项目、企业ERP系统升级项目、生产线自动化改造项目 等
+
+  search_apply_date_start:
+    type: role
+    role: combobox
+    name: 开始日期
+    note: 申请日期-开始，需通过 label 文本"申请日期"区分
+
+  search_apply_date_end:
+    type: role
+    role: combobox
+    name: 结束日期
+    note: 申请日期-结束（第一个"至"），需通过 label 文本"至" .first 区分
+
+  search_audit_date_start:
+    type: role
+    role: combobox
+    name: 开始日期
+    note: 审核日期-开始，需通过 label 文本"审核日期"区分
+
+  search_audit_date_end:
+    type: role
+    role: combobox
+    name: 结束日期
+    note: 审核日期-结束（第二个"至"），需通过 label 文本"至" .last 区分
+
+  search_audit_result_select:
+    type: role
+    role: combobox
+    name: 审核结果
+    options:
+      - 审核中
+      - 已批准
+      - 已拒绝
+
+  search_auditor_select:
+    type: role
+    role: combobox
+    name: 审核人
+    options:
+      - 审核
+      - 李四
+      - 王五
+    note: 静态选项，当前仅 3 个审核人可选
+
+  search_apply_status_select:
+    type: role
+    role: combobox
+    name: 申请状态
+    options:
+      - 已提交
+      - 已批准
+      - 审核中
+      - 已拒绝
+
+  search_button:
+    type: role
+    role: button
+    name: 查询
+
+  reset_button:
+    type: role
+    role: button
+    name: 重置
+
+  # ---- 表格 ----
+  table_header:
+    type: css
+    value: .el-table__header-wrapper
+    columns:
+      - 采购编号
+      - 项目名称
+      - 申请日期
+      - 审批时间
+      - 审核结果
+      - 申请状态
+      - 审核人
+      - 操作
+
+  table_body:
+    type: css
+    value: .el-table__body-wrapper
+
+  view_button:
+    type: role
+    role: button
+    name: 查看
+    note: 点击打开新标签页展示采购申请详情
+
+  application_page_button:
+    type: role
+    role: button
+    name: 申请页
+    note: 点击跳转新标签页到采购申请详情页，可进行审核操作
+
+  delete_button:
+    type: role
+    role: button
+    name: 删除
+
+  # ---- 分页 ----
+  next_page_button:
+    type: role
+    role: button
+    name: 下一页
+
+  prev_page_button:
+    type: role
+    role: button
+    name: 上一页
+
+  pagination_total:
+    type: css
+    value: .el-pagination__total
+
+  page_size_select:
+    type: role
+    role: combobox
+    name: 每页条数
+    options:
+      - 10条/页
+      - 20条/页
+      - 50条/页
+      - 100条/页

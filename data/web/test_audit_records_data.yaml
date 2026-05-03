@@ -1,0 +1,59 @@
+# 审核记录测试数据
+
+# 采购编号筛选
+search_purchase_no:
+  purchase_no: "PA202603250001"
+  description: "按采购编号筛选"
+
+# 项目名称筛选
+search_project_name:
+  project_name: "智慧园区"
+  description: "按项目名称模糊筛选"
+
+# 审核结果筛选
+search_audit_result_approved:
+  audit_result: "已批准"
+  description: "按审核结果筛选-已批准"
+
+search_audit_result_rejected:
+  audit_result: "已拒绝"
+  description: "按审核结果筛选-已拒绝"
+
+search_audit_result_pending:
+  audit_result: "审核中"
+  description: "按审核结果筛选-审核中"
+
+# 审核人筛选
+search_auditor:
+  auditor: "李四"
+  description: "按审核人筛选"
+
+# 申请状态筛选
+search_apply_status_submitted:
+  apply_status: "已提交"
+  description: "按申请状态筛选-已提交"
+
+search_apply_status_approved:
+  apply_status: "已批准"
+  description: "按申请状态筛选-已批准"
+
+search_apply_status_pending:
+  apply_status: "审核中"
+  description: "按申请状态筛选-审核中"
+
+# 日期范围筛选
+search_apply_date_range:
+  start_date: "2025-01-01"
+  end_date: "2026-12-31"
+  description: "申请日期范围筛选"
+
+search_audit_date_range:
+  start_date: "2025-01-01"
+  end_date: "2026-12-31"
+  description: "审批时间范围筛选"
+
+# 组合筛选
+search_audit_result_and_status:
+  audit_result: "已拒绝"
+  apply_status: "已提交"
+  description: "审核结果+申请状态组合筛选"
