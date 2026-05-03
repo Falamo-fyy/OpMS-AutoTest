@@ -172,26 +172,61 @@ During pytest runs, `Logger.set_run_log()` is called in `pytest_configure` to cr
 - API 测试用例必须引入 `json` 库处理接口返回的 JSON 数据：字符串处理用 `json.loads()` / `json.dumps()`，文件处理用 `json.load()` / `json.dump()`
 - API 接口信息统一维护在 `config/api_config.yaml`，通过 `BaseApi.send(api_name)` 读取配置发请求，不在测试代码中硬编码接口路径
 
+### Locators 目录 (`locators/`)
+
+结构化的页面元素语义定义，用于减少 Playwright 浏览网页时的 token 消耗。
+
+| 文件 | 页面 |
+|------|------|
+| `locators/login.yaml` | 登录页 |
+| `locators/purchase_request.yaml` | 采购申请页 |
+| `locators/project_management.yaml` | 项目管理页 |
+
+**使用规则：**
+
+1. **优先读取 `locators/` YAML** — 需要定位元素时，先查 `locators/` 下对应页面的 YAML 文件，不要重新浏览网页
+2. **只有 locator 失效时才允许局部扫描** — 用 Playwright 工具仅扫描失效元素所在的局部区域，禁止全 DOM 分析
+3. **发现新元素时补充 YAML** — 浏览中发现未记录的元素，追加到对应 YAML 文件
+
+YAML 格式：
+```yaml
+page: 页面名称
+
+elements:
+
+  元素名称:
+    type: role | placeholder | label | text | testid | css
+    role: button              # type=role 时必填
+    name: 按钮文本             # type=role 时使用
+    value: 属性值              # type=placeholder/label/text/testid/css 时使用
+```
+
+type 优先级：`role` > `testid` > `label` > `placeholder` > `text` > `css`（最后手段）
+
 ### Locator best practices
 
-定位优先级：**文本定位优先**，当文本定位存在冲突（多个元素匹配同一文本）时，再使用 Playwright 推荐的结构化定位方式（ARIA role、label、placeholder 等）。绝对禁用 `nth-child` 等依赖 DOM 顺序的脆弱选择器。
+定位优先级：**get_by_role 最优先**，然后 testid、label、placeholder，最后才用 CSS。绝对禁用 `nth-child`、xpath、深层 CSS、`locator("..")` 等依赖 DOM 结构的脆弱选择器。
 
-1. **优先使用文本定位** — `get_by_text()`, `get_by_role(..., name=text)`, `filter(has_text=label)` — 语义清晰，不依赖 DOM 结构
-2. **文本冲突时使用 Playwright 推荐定位** — `get_by_role()`, `get_by_label()`, `get_by_placeholder()`, `get_by_test_id()` — 结构化、稳定
-3. **最后才用 CSS 选择器** — 仅当以上方式均不可用时，且必须避免 `nth-child`、索引等脆弱写法
+1. **`get_by_role()`** — 第一优先级，语义化、稳定、可访问性优先
+2. **`get_by_test_id()`** — 第二优先级（页面有 data-testid 时优先）
+3. **`get_by_label()`** — 第三优先级
+4. **`get_by_placeholder()`** — 第四优先级
+5. **`get_by_text()` + `filter(has_text=)` / `css`** — 仅当以上均不可用
 
 ```python
 # BAD — 依赖 DOM 顺序，字段调整即失败
 SEARCH_URGENCY = ".search-form .el-form-item:nth-child(2) .el-select"
 
-# GOOD — 文本定位，字段顺序无关
-def _search_select_by_label(self, label):
-    return self.page.locator(".search-form .el-form-item").filter(has_text=label).locator(".el-select")
-
-# GOOD — ARIA role + name 文本定位
+# GOOD — role + name 文本定位
 self.page.get_by_role("button", name="查询")
 self.page.get_by_role("menuitem", name="采购申请")
-self.page.get_by_role("listitem", name="第 2 页")
+self.page.get_by_role("dialog", name="新增项目")
+
+# GOOD — placeholder 定位
+self.page.get_by_placeholder("请输入项目名称")
+
+# GOOD — label 定位
+self.page.get_by_label("省份")
 ```
 
 - **Use `get_by_role("row"/"cell")` for table access** instead of CSS `:nth-child()` on `.el-table__row > td`

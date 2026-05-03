@@ -1,0 +1,259 @@
+page: project_management
+
+elements:
+
+  # ---- 搜索区域 ----
+  search_province_select:
+    type: role
+    role: combobox
+    name: 省份
+
+  search_city_select:
+    type: role
+    role: combobox
+    name: 市县
+
+  search_project_no:
+    type: placeholder
+    value: 请输入项目编号
+
+  search_project_name:
+    type: placeholder
+    value: 请输入项目名称
+
+  search_creator_select:
+    type: role
+    role: combobox
+    name: 创建人
+
+  search_status_select:
+    type: role
+    role: combobox
+    name: 项目状态
+
+  search_start_date:
+    type: placeholder
+    value: 选择开始日期
+
+  search_end_date:
+    type: placeholder
+    value: 选择结束日期
+
+  search_button:
+    type: role
+    role: button
+    name: 查询
+
+  reset_button:
+    type: role
+    role: button
+    name: 重置
+
+  # ---- 操作按钮 ----
+  add_project_button:
+    type: role
+    role: button
+    name: 新增项目
+
+  batch_delete_button:
+    type: role
+    role: button
+    name: 批量删除
+
+  export_button:
+    type: role
+    role: button
+    name: 导出Excel
+
+  # ---- 表格 ----
+  select_all_checkbox:
+    type: css
+    value: .el-table__header .el-checkbox
+
+  table_body:
+    type: css
+    value: .el-table__body-wrapper
+
+  # ---- 新增弹窗 ----
+  add_dialog:
+    type: role
+    role: dialog
+    name: 新增项目
+
+  add_province_select:
+    type: role
+    role: combobox
+    name: "* 省份"
+
+  add_city_select:
+    type: role
+    role: combobox
+    name: "* 市县"
+
+  add_project_name_input:
+    type: placeholder
+    value: 请输入项目名称
+
+  add_status_select:
+    type: role
+    role: combobox
+    name: "* 项目状态"
+
+  add_start_date:
+    type: role
+    role: combobox
+    name: 开始时间
+
+  add_end_date:
+    type: role
+    role: combobox
+    name: 结束时间
+
+  add_description_input:
+    type: placeholder
+    value: 请输入项目描述
+
+  add_confirm_button:
+    type: role
+    role: button
+    name: 确定
+
+  add_cancel_button:
+    type: role
+    role: button
+    name: 取消
+
+  add_dialog_close_button:
+    type: role
+    role: button
+    name: 关闭此对话框
+
+  # ---- 编辑弹窗 ----
+  edit_dialog:
+    type: role
+    role: dialog
+    name: 编辑项目
+
+  edit_project_name_input:
+    type: placeholder
+    value: 请输入项目名称
+
+  edit_status_select:
+    type: role
+    role: combobox
+    name: "* 项目状态"
+
+  edit_start_date:
+    type: role
+    role: combobox
+    name: 开始时间
+
+  edit_end_date:
+    type: role
+    role: combobox
+    name: 结束时间
+
+  edit_description_input:
+    type: placeholder
+    value: 请输入项目描述
+
+  edit_confirm_button:
+    type: role
+    role: button
+    name: 确定
+
+  edit_cancel_button:
+    type: role
+    role: button
+    name: 取消
+
+  edit_dialog_close_button:
+    type: role
+    role: button
+    name: 关闭此对话框
+
+  # ---- 查看详情弹窗 ----
+  view_dialog:
+    type: role
+    role: dialog
+    name: 项目详情
+
+  view_province:
+    type: role
+    role: textbox
+    name: 省份
+
+  view_city:
+    type: role
+    role: textbox
+    name: 市县
+
+  view_project_no:
+    type: role
+    role: textbox
+    name: 项目编号
+
+  view_project_name:
+    type: role
+    role: textbox
+    name: 项目名称
+
+  view_creator:
+    type: role
+    role: textbox
+    name: 项目负责人
+
+  view_status:
+    type: role
+    role: textbox
+    name: 项目状态
+
+  view_start_date:
+    type: role
+    role: textbox
+    name: 开始时间
+
+  view_end_date:
+    type: role
+    role: textbox
+    name: 结束时间
+
+  view_application_count:
+    type: role
+    role: textbox
+    name: 申请数量
+
+  view_item_count:
+    type: role
+    role: textbox
+    name: 申请物品总数
+
+  view_total_amount:
+    type: role
+    role: textbox
+    name: 申请总金额
+
+  view_description:
+    type: role
+    role: textbox
+    name: 项目描述
+
+  view_close_button:
+    type: role
+    role: button
+    name: 关闭
+
+  # ---- 分页 ----
+  next_page_button:
+    type: role
+    role: button
+    name: 下一页
+
+  prev_page_button:
+    type: role
+    role: button
+    name: 上一页
+
+  pagination_total:
+    type: css
+    value: .el-pagination__total

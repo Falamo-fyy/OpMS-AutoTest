@@ -1,0 +1,125 @@
+page: purchase_request
+
+elements:
+
+  # ---- 搜索区域 ----
+  search_request_no:
+    type: placeholder
+    value: 请输入申请编号
+
+  search_project_name:
+    type: placeholder
+    value: 请输入项目名称
+
+  search_applicant:
+    type: placeholder
+    value: 请输入申请人
+
+  search_start_date:
+    type: placeholder
+    value: 选择开始日期
+
+  search_end_date:
+    type: placeholder
+    value: 选择结束日期
+
+  search_urgency_select:
+    type: text
+    value: 请选择紧急程度
+
+  search_status_select:
+    type: text
+    value: 请选择审核状态
+
+  search_department_select:
+    type: text
+    value: 请选择使用科室
+
+  search_button:
+    type: role
+    role: button
+    name: 查询
+
+  reset_button:
+    type: role
+    role: button
+    name: 重置
+
+  # ---- 操作按钮 ----
+  add_request_button:
+    type: role
+    role: button
+    name: 新增申请
+
+  department_button:
+    type: role
+    role: button
+    name: 科室管理
+
+  audit_button:
+    type: role
+    role: button
+    name: 开始审核
+
+  batch_delete_button:
+    type: role
+    role: button
+    name: 批量删除
+
+  export_button:
+    type: role
+    role: button
+    name: 导出Excel
+
+  # ---- 表格 ----
+  select_all_checkbox:
+    type: css
+    value: .el-table__header .el-checkbox
+
+  # ---- 新增弹窗 ----
+  add_dialog:
+    type: role
+    role: dialog
+    name: 新增采购申请
+
+  form_request_no:
+    type: placeholder
+    value: 请输入申请编号
+
+  form_reason:
+    type: placeholder
+    value: 请详细说明采购原因及物品用途...
+
+  add_item_button:
+    type: role
+    role: button
+    name: 添加物品
+
+  submit_button:
+    type: role
+    role: button
+    name: 提交申请
+
+  cancel_button:
+    type: role
+    role: button
+    name: 取消
+
+  dialog_close_button:
+    type: css
+    value: .el-drawer__close-btn
+
+  # ---- 分页 ----
+  next_page_button:
+    type: role
+    role: button
+    name: 下一页
+
+  prev_page_button:
+    type: role
+    role: button
+    name: 上一页
+
+  pagination_total:
+    type: css
+    value: .el-pagination__total

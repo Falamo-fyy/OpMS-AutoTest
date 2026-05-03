@@ -1,0 +1,21 @@
+page: login
+
+elements:
+
+  username_input:
+    type: placeholder
+    value: 请输入用户名
+
+  password_input:
+    type: placeholder
+    value: 请输入密码
+
+  login_button:
+    type: role
+    role: button
+    name: 登 录
+
+  success_heading:
+    type: role
+    role: heading
+    name: 综合运维服务平台
