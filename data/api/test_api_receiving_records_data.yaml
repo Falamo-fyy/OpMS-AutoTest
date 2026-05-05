@@ -1,0 +1,81 @@
+# 收货记录接口测试数据
+
+# 默认查询条件（全空，返回全部数据）
+query_default:
+  description: "默认条件查询收货记录列表"
+  params:
+    pageNum: 1
+    pageSize: 10
+  body:
+    applicationNo: ""
+    orderNo: ""
+    projectName: ""
+    department: ""
+    recipient: ""
+    shipmentStatus: ""
+    isReceived: ""
+    storageStatus: ""
+    receiveStartDate: ""
+    receiveEndDate: ""
+
+# 按收货状态筛选
+query_by_receiving_status:
+  description: "按收货状态筛选收货记录"
+  params:
+    pageNum: 1
+    pageSize: 10
+  body:
+    applicationNo: ""
+    orderNo: ""
+    projectName: ""
+    department: ""
+    recipient: ""
+    shipmentStatus: ""
+    isReceived: "0"
+    storageStatus: ""
+    receiveStartDate: ""
+    receiveEndDate: ""
+
+# 按采购状态筛选
+query_by_purchase_status:
+  description: "按采购状态筛选收货记录"
+  params:
+    pageNum: 1
+    pageSize: 10
+  body:
+    applicationNo: ""
+    orderNo: ""
+    projectName: ""
+    department: ""
+    recipient: ""
+    shipmentStatus: "未发货"
+    isReceived: ""
+    storageStatus: ""
+    receiveStartDate: ""
+    receiveEndDate: ""
+
+# 按申请编号精确查询
+query_by_application_no:
+  description: "按申请编号精确查询收货记录"
+  params:
+    pageNum: 1
+    pageSize: 10
+  body:
+    applicationNo: "PA202603250140"
+    orderNo: ""
+    projectName: ""
+    department: ""
+    recipient: ""
+    shipmentStatus: ""
+    isReceived: ""
+    storageStatus: ""
+    receiveStartDate: ""
+    receiveEndDate: ""
+
+# 不携带 token 查询
+query_no_token:
+  description: "不携带 token 查询收货记录"
+
+# 携带无效 token 查询
+query_invalid_token:
+  description: "携带无效 token 查询收货记录"

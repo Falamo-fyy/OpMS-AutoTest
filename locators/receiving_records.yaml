@@ -1,0 +1,140 @@
+page: receiving_records
+
+elements:
+
+  # ---- 搜索区域（第一行）----
+  search_application_no:
+    type: placeholder
+    value: 请输入申请编号
+
+  search_order_no:
+    type: placeholder
+    value: 请输入采购编号
+
+  search_project_name:
+    type: placeholder
+    value: 请输入项目名称
+
+  search_department_select:
+    type: text
+    value: 请选择所属科室
+    note: 远程搜索，输入科室关键词触发选项加载
+
+  search_recipient:
+    type: placeholder
+    value: 请输入收件人姓名
+
+  search_purchase_status_select:
+    type: text
+    value: 请选择采购状态
+    options:
+      - 未发货
+      - 已发货
+      - 部分发货
+
+  # ---- 搜索区域（第二行）----
+  search_receiving_status_select:
+    type: text
+    value: 请选择收货状态
+    options:
+      - 全部
+      - 未收货
+      - 已收货
+
+  search_storage_status_select:
+    type: text
+    value: 请选择入库状态
+    options:
+      - 全部
+      - 未入库
+      - 已入库
+
+  search_receiving_date_start:
+    type: role
+    role: combobox
+    name: 开始日期
+    note: 收货日期范围-开始
+
+  search_receiving_date_end:
+    type: role
+    role: combobox
+    name: 结束日期
+    note: 收货日期范围-结束
+
+  search_button:
+    type: role
+    role: button
+    name: 搜索
+
+  reset_button:
+    type: role
+    role: button
+    name: 重置
+
+  # ---- 操作按钮 ----
+  export_button:
+    type: role
+    role: button
+    name: 导出Excel
+
+  # ---- 表格 ----
+  table_header:
+    type: css
+    value: .el-table__header-wrapper
+    columns:
+      - 项目名称
+      - 所属科室
+      - 申请编号
+      - 采购编号
+      - 采购状态
+      - 收货状态
+      - 收件人
+      - 入库状态
+      - 收货日期
+      - 操作
+
+  table_body:
+    type: css
+    value: .el-table__body-wrapper
+
+  view_button:
+    type: role
+    role: button
+    name: 查看
+    note: 点击打开新标签页展示收货详情
+
+  receive_button:
+    type: role
+    role: button
+    name: 收货
+    note: 点击打开收货弹窗
+
+  delete_button:
+    type: role
+    role: button
+    name: 删除
+
+  # ---- 分页 ----
+  next_page_button:
+    type: role
+    role: button
+    name: 下一页
+
+  prev_page_button:
+    type: role
+    role: button
+    name: 上一页
+
+  pagination_total:
+    type: css
+    value: .el-pagination__total
+
+  page_size_select:
+    type: role
+    role: combobox
+    name: 每页条数
+    options:
+      - 10条/页
+      - 20条/页
+      - 50条/页
+      - 100条/页

@@ -181,6 +181,7 @@ During pytest runs, `Logger.set_run_log()` is called in `pytest_configure` to cr
 | `locators/login.yaml` | 登录页 |
 | `locators/purchase_request.yaml` | 采购申请页 |
 | `locators/project_management.yaml` | 项目管理页 |
+| `locators/audit_records.yaml` | 审核记录页 |
 
 **使用规则：**
 
@@ -232,3 +233,23 @@ self.page.get_by_label("省份")
 - **Use `get_by_role("row"/"cell")` for table access** instead of CSS `:nth-child()` on `.el-table__row > td`
 - **Prefer `get_cell_text_by_header(row, header)`** over numeric column indices — dynamically resolves column position from header text, so tests survive column reordering
 - Page objects can use private `_prefixed` helper methods for reusable locator strategies (e.g., `_dialog_select_by_label`, `_body_table`)
+
+### Search form locator pattern
+
+该项目的搜索表单使用 `el-row > el-col` 网格布局，**不是** `.el-form-item`。定位搜索字段时使用标签文本过滤 `el-col`：
+
+```python
+# 搜索区域下拉框 — 通过标签文本在 .search-form 内定位
+def _search_select_by_label(self, label: str):
+    return self.page.locator(".search-form .el-col").filter(has_text=label).locator(".el-select")
+
+# 搜索区域日期选择器 — 日期字段可能同名（如两组日期范围各有"开始日期"/"结束日期"）
+def _search_date_by_label(self, label: str):
+    return self.page.locator(".search-form .el-col").filter(has_text=label).get_by_role("combobox")
+
+# 同名日期字段用 .first/.last 区分，如：
+#   "至".first  → 申请日期范围的结束日期
+#   "至".last   → 审核日期范围的结束日期
+```
+
+**关键注意：** `.search-form .el-form-item` 在该项目的搜索表单中不存在（`count()` 返回 0），必须使用 `.search-form .el-col`。

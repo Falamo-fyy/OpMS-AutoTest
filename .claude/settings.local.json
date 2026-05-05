@@ -15,7 +15,8 @@
       "Bash(playwright-cli snapshot *)",
       "Bash(npx playwright-cli *)",
       "Bash(pip show *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(npx skills *)"
     ]
   }
 }

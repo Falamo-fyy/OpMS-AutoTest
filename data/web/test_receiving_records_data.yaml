@@ -1,0 +1,59 @@
+# 收货记录页面测试数据
+
+# 申请编号筛选
+search_application_no:
+  application_no: "PA202603250140"
+  description: "按申请编号筛选"
+
+# 采购编号筛选
+search_order_no:
+  order_no: "PO1774452009609"
+  description: "按采购编号筛选"
+
+# 项目名称筛选
+search_project_name:
+  project_name: "数据中心"
+  description: "按项目名称模糊筛选"
+
+# 采购状态筛选
+search_purchase_status_unshipped:
+  purchase_status: "未发货"
+  description: "按采购状态筛选-未发货"
+
+search_purchase_status_shipped:
+  purchase_status: "已发货"
+  description: "按采购状态筛选-已发货"
+
+search_purchase_status_partial:
+  purchase_status: "部分发货"
+  description: "按采购状态筛选-部分发货"
+
+# 收货状态筛选
+search_receiving_status_unreceived:
+  receiving_status: "未收货"
+  description: "按收货状态筛选-未收货"
+
+search_receiving_status_received:
+  receiving_status: "已收货"
+  description: "按收货状态筛选-已收货"
+
+# 入库状态筛选
+search_storage_status_unstored:
+  storage_status: "未入库"
+  description: "按入库状态筛选-未入库"
+
+search_storage_status_stored:
+  storage_status: "已入库"
+  description: "按入库状态筛选-已入库"
+
+# 收货日期范围筛选
+search_receiving_date_range:
+  start_date: "2025-01-01"
+  end_date: "2026-12-31"
+  description: "收货日期范围筛选"
+
+# 组合筛选
+search_purchase_and_receiving_status:
+  purchase_status: "未发货"
+  receiving_status: "未收货"
+  description: "采购状态+收货状态组合筛选"

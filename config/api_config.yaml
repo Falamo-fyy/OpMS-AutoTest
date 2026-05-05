@@ -16,3 +16,7 @@ user_info:
 purchase_application_query:
   path: /purchase-application/queryDataList
   method: POST
+
+receiving_records_query:
+  path: /receiving-record/queryPageList
+  method: POST
